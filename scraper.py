@@ -7,8 +7,6 @@ import requests
 import time
 import json
 
-
-
 def scrape_links(DRIVER_PATH):
 
     # Webdriver path (for Selenium)
@@ -18,7 +16,7 @@ def scrape_links(DRIVER_PATH):
     driver = webdriver.Chrome(executable_path = DRIVER_PATH)
 
     # Gather links for every college
-    links = []
+    links = {}
     for page in range(292): # There are 292 pages
         URL = 'https://collegescorecard.ed.gov/search/?page=' + str(page) + '&sort=avg_net_price:desc'
         driver.get(URL)
@@ -36,13 +34,9 @@ def scrape_links(DRIVER_PATH):
 
         temp_links = driver.find_elements_by_class_name('nameLink')
         for link in temp_links:
-            temp = {}
             page = link.get_attribute('href')
             name = link.text
-            temp[name] = page
-            links.append(temp)
-
-        
+            links[name] = page
 
     with open('links.json', 'w') as fi:
         json.dump(links, fi)
@@ -51,7 +45,12 @@ def scrape_links(DRIVER_PATH):
 # The following would scrape individual college data but we are forgoing this right now because that's a lot lol
 
 # Time to visit each link and scrape data
-def read_data(link, DRIVER_PATH):
+def read_data(name, DRIVER_PATH):   
+    with open('links.json') as json_file:
+        data = json.load(json_file)
+
+    link = data[name]
+
     driver = webdriver.Chrome(executable_path = DRIVER_PATH)
     driver.get(link)
     time.sleep(3)
@@ -65,7 +64,7 @@ def read_data(link, DRIVER_PATH):
     college['location_type'] = driver.find_element_by_xpath('//*[@id="school"]/div[1]/div[2]/div[1]/div/ul/li[3]/span').text
     college['size'] = driver.find_element_by_xpath('//*[@id="school"]/div[1]/div[2]/div[1]/div/ul/li[4]/span').text
     college['salary'] = driver.find_elements_by_xpath('//*[@id="school-salary-after-complete"]/div/div/div/div/span[4]/span')
-    data = []
+
     for val in range(len(college['salary'])):
         college['salary'][val] = college['salary'][val].text
     for val in range(len(college['salary'])):
@@ -96,12 +95,18 @@ def read_data(link, DRIVER_PATH):
     driver.close()
     college['diversity'] = diversity
     return college
+
+# DRIVER_PATH = '/Users/pastel/Downloads/chromedriverReal'
+# scrape_links(DRIVER_PATH)
+# college = read_data('New York University', DRIVER_PATH)
+# print(college)
+'''
 with open('links.json') as json_file:
     links = json.load(json_file)
 
 data = []
 
-'''
+
 Will be stored in dictionaries
 {
     name: [string], //*[@id="school"]/div[1]/div[2]/div[1]/h1
