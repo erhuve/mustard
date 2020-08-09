@@ -21,7 +21,7 @@ DRIVER_PATH = args["driver"]
 firstCollege = args["college"]
 secondCollege = args["compare"]
 '''
-def compare(firstCollege, secondCollege, DRIVER_PATH):
+def compare(firstCollege, secondCollege = "Indiana Institute of Technology", DRIVER_PATH = 'chromedriver', returnDf = False):
     dataFirst = {}
     dataSecond = {}
     initdfLength = 0
@@ -60,5 +60,10 @@ def compare(firstCollege, secondCollege, DRIVER_PATH):
     #compare_colleges(dataFirst, dataSecond)
     if len(df) > initdfLength:
         df.to_csv('college_db.csv')
+    if returnDf:
+        return df
+    else:
+        return [dataFirst, dataSecond]
 
-    return df
+
+print(compare("Stanford University", "University of Southern California", returnDf = True))
