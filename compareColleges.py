@@ -95,7 +95,42 @@ def sizeScore(college, preferences):
         return 1
     return 0
 
-print(diversityScore("University of Washington-Seattle Campus"))
+def calculate(colleges, field, salary, urbanicity):
+    
+    print(field)
+    college_scores = []
+    for college in colleges:
+        field_score = 0
+
+        if type(college['fields']) is list:
+            for rank, study in enumerate(college['fields']):
+                if study == field:
+                    field_score = max(10 - rank, 0)
+        else:      
+            fields = college['fields'].replace('[','')
+            fields = fields.replace(']','')
+            fields = fields.split('",',)
+
+            for rank, study in enumerate(fields):
+
+                study = study.replace('"','')
+                study = study.strip()
+
+                if study == field:
+
+                    field_score = max(10 - rank, 0)
+
+        salary_score = min(float(college['salary']) / salary * 5, 5)
+
+        urban_score = 0
+        urbanicity = set(urbanicity)
+        if college['location_type'] in urbanicity:
+            urban_score += 1
+        
+        college_scores.append([field_score, salary_score, urban_score])
+    return college_scores
+    
+print(diversityScore("Bob Jones University"))
 print(costScore("University of Washington-Seattle Campus", 12000))
 print(publicScore("University of Washington-Seattle Campus", ["Public", "Private"]))
 print(sizeScore("University of Washington-Seattle Campus", ["Small", "Medium", "Large"]))
