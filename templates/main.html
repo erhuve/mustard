@@ -85,12 +85,12 @@
                 <label for="rural">Rural</label><br><br>
 
                 <label for="salary">Salary goal ($0-150,000)</label><br>
-                <input type="range" id="salary" name="salary" min="0" max="150000" oninput="salaryOut.value = salary.value"><br>
-                <input name="salaryOut" id="salaryOut"></input oninput="salary.value = salaryOut.value"><br><br>
+                <input type="range" name="salary" min="0" max="150000" value="0" oninput="this.form.salaryOut.value=this.value"><br>
+                <input type="number" name="salaryOut" value="0" oninput="this.form.salary.value=this.value"></input><br><br>
 
                 <label for="cost">Yearly cost preference ($0-120,000)</label><br>
-                <input type="range" id="cost" name="cost" min="0" max="120000" oninput="costOut.value = cost.value"><br>
-                <input name="costOut" id="costOut"></input oninput="cost.value = costOut.value"><br>
+                <input type="range" name="cost" min="0" max="120000"  value="0" oninput="this.form.costOut.value=this.value"><br>
+                <input type="number" name="costOut" value="0" oninput="this.form.cost.value=this.value"></input><br>
 
                 <p>Is diversity important to you?</p>
                 <input type="radio" id="diverse" name="diversity" value="diverse">
