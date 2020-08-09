@@ -1,7 +1,7 @@
 # import argparse
 import pandas as pd
 import os
-from selenium import webdriver
+# from selenium import webdriver
 from scraper import read_data
 import numpy as np
 '''
