@@ -79,27 +79,39 @@ def convertStringToListNums(string):
 
 
 def diversityScore(college):
-    return (5.0 - np.std(np.array(convertStringToListNums(compare(college)[0]["diversity"]))) / 6.28)
+    return (5.0 - np.std(np.array(convertStringToListNums(college["diversity"]))) / 6.28)
 
 
 def costScore(college, preference):
-    return min(6 - float(float(compare(college)[0]["avg_cost"]) / preference), 5)
+    return min(6 - float(float(college["avg_cost"]) / float(preference)), 5)
 
 def publicScore(college, preferences):
-    if compare(college)[0]["public"] in preferences:
+    if college["public"] in preferences:
         return 1
     return 0
 
 def sizeScore(college, preferences):
-    if compare(college)[0]["size"] in preferences:
+    # Leaving this here in case we want to revert back to it
+    # if compare(college)[0]["size"] in preferences:
+    if college["size"] in preferences:
         return 1
     return 0
 
-def calculate(colleges, field, salary, urbanicity):
+def calculate(colleges, field, salary, cost, diversity, size, urbanicity, public):
     
-    print(field)
     college_scores = []
+    
     for college in colleges:
+        if college['salary'] == 0 or college['avg_cost'] == '[]' or type(college['avg_cost']) is list:
+            college_scores.append(['We don\'t have enough information to score this college for you' for i in range(7)])
+            continue
+        cost_score = costScore(college, cost)
+        diversity_score = 0
+        if diversity:
+            diversity_score = diversityScore(college)
+        size_score = sizeScore(college, size)
+        public_score = publicScore(college, public)
+
         field_score = 0
 
         if type(college['fields']) is list:
@@ -120,18 +132,18 @@ def calculate(colleges, field, salary, urbanicity):
 
                     field_score = max(10 - rank, 0)
 
-        salary_score = min(float(college['salary']) / salary * 5, 5)
+        salary_score = min(float(college['salary']) / float(salary) * 5, 5)
 
         urban_score = 0
         urbanicity = set(urbanicity)
         if college['location_type'] in urbanicity:
             urban_score += 1
         
-        college_scores.append([field_score, salary_score, urban_score])
+        college_scores.append([field_score, salary_score, cost_score, diversity_score, size_score, urban_score, public_score])
     return college_scores
     
-print(diversityScore("Bob Jones University"))
-print(costScore("University of Washington-Seattle Campus", 12000))
-print(publicScore("University of Washington-Seattle Campus", ["Public", "Private"]))
-print(sizeScore("University of Washington-Seattle Campus", ["Small", "Medium", "Large"]))
+# print(diversityScore("Bob Jones University"))
+# print(costScore("University of Washington-Seattle Campus", 12000))
+# print(publicScore("University of Washington-Seattle Campus", ["Public", "Private"]))
+# print(sizeScore("University of Washington-Seattle Campus", ["Small", "Medium", "Large"]))
 

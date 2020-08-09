@@ -33,28 +33,6 @@
                     {% endfor %}
                 </select><br><br>
 
-
-            <!--
-                <label for="college1">First college to compare</label><br>
-                <input type="text" id="college1" name="college1"><br>
-                <label for="college2">Second college to compare</label><br>
-                <input type="text" id="college2" name="college2"><br><br>
-
-            -->
-                <input type="submit" value="Compare 'em!"><br><br>
-            </form>
-            <div class="result">
-                <!--
-                {% if result %}<p>{{result}}</p>{% endif %}
-                -->
-                {% for table in tables %}
-                    {{ table|safe }}
-                {% endfor %}
-            </div>
-        </div>
-        <div id="recommend">
-            <h1>Find colleges</h1>
-            <form action="{{url_for('main')}}" method='POST'>
                 <label for="field">What do you want to study?</label><br>
                 <input type="text" id="field" name="field"><br>
 
@@ -93,13 +71,44 @@
                 <input type="number" name="costOut" value="0" oninput="this.form.cost.value=this.value"></input><br>
 
                 <p>Is diversity important to you?</p>
-                <input type="radio" id="diverse" name="diversity" value="diverse">
+                <input type="radio" id="diverse" name="diverse" value="diverse">
                 <label for="diverse">Yes</label>
-                <input type="radio" id="notdiverse" name="diversity" value="notdiverse">
+                <input type="radio" id="notdiverse" name="diverse" value="notdiverse">
                 <label for="notdiverse">No</label><br><br>
+
+
+            <!--
+                <label for="college1">First college to compare</label><br>
+                <input type="text" id="college1" name="college1"><br>
+                <label for="college2">Second college to compare</label><br>
+                <input type="text" id="college2" name="college2"><br><br>
+
+            -->
+                <input type="submit" value="Compare 'em!"><br><br>
+            </form>
+            <div class="result">
+                <!--
+                
+                -->
+                {% for table in tables %}
+                    {{ table|safe }}
+                {% endfor %}
+                {% if result %}<p>{{result}}</p>{% endif %}
+                {% for res in results %}
+                    {{ res|safe }}
+                {% endfor %}
+            </div>
+            
+        </div>
+    <!--
+        <div id="recommend">
+            <h1>Find colleges</h1>
+            <form action="{{url_for('main')}}" method='POST'>
+                
 
                 <input type="submit" value="Show me colleges!">
             </form>
         </div>
+    -->
     </body>
 </html>
