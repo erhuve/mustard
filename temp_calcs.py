@@ -1,7 +1,7 @@
 from compareColleges import compare
 
 DRIVER_PATH = '/Users/pastel/Downloads/chromedriverReal'
-colleges = compare('New York University', 'Stanford University', DRIVER_PATH=DRIVER_PATH, returnDf=False)
+colleges = compare('Princeton University', 'Stanford University', DRIVER_PATH=DRIVER_PATH, returnDf=False)
 
 def calculate(colleges, field, salary, urbanicity):
 
@@ -10,18 +10,23 @@ def calculate(colleges, field, salary, urbanicity):
     for college in colleges:
         field_score = 0
 
-        fields = college['fields'].replace('[','')
-        fields = fields.replace(']','')
-        fields = fields.split('",',)
+        if type(college['fields']) is list:
+            for rank, study in enumerate(college['fields']):
+                if study == field:
+                    field_score = max(10 - rank, 0)
+        else:      
+            fields = college['fields'].replace('[','')
+            fields = fields.replace(']','')
+            fields = fields.split('",',)
 
-        for rank, study in enumerate(fields):
+            for rank, study in enumerate(fields):
 
-            study = study.replace('"','')
-            study = study.strip()
+                study = study.replace('"','')
+                study = study.strip()
 
-            if study == field:
+                if study == field:
 
-                field_score = max(10 - rank, 0)
+                    field_score = max(10 - rank, 0)
 
         salary_score = min(float(college['salary']) / salary * 5, 5)
 
