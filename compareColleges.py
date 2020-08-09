@@ -99,3 +99,4 @@ print(diversityScore("University of Washington-Seattle Campus"))
 print(costScore("University of Washington-Seattle Campus", 12000))
 print(publicScore("University of Washington-Seattle Campus", ["Public", "Private"]))
 print(sizeScore("University of Washington-Seattle Campus", ["Small", "Medium", "Large"]))
+
