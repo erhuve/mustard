@@ -108,10 +108,7 @@ def read_data(name, DRIVER_PATH):
 '''
 with open('links.json') as json_file:
     links = json.load(json_file)
-
 data = []
-
-
 Will be stored in dictionaries
 {
     name: [string], //*[@id="school"]/div[1]/div[2]/div[1]/h1
@@ -159,7 +156,6 @@ for i, link in enumerate(links):
     college['fields'] = driver.find_elements_by_class_name('pa-2')
     for i, field in enumerate(college['fields']):
         college['fields'][i] = field.text
-
     # 1-9 percentages for diversity
     diversity = []
     for i in range(1, 10):
@@ -171,15 +167,12 @@ for i, link in enumerate(links):
                 break
             real_percentage += char
         diversity.append(int(real_percentage))
-
     college['diversity'] = diversity
     data.append(college)
     # Only capture 1000
     # if i >= 999:
     #     break
-
 with open('data.json', 'w') as f:
     json.dump(data, f)
-
 driver.close()
 """
