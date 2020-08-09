@@ -9,10 +9,28 @@
         <div id="compare">
             <h1>Compare colleges</h1>
             <form action="{{url_for('main')}}" method='POST'>
+                <p>First college to compare</p>
+                <select name="colleges1" method="GET" action="/">
+                    {% for college in colleges1 %}
+                    <option value= "{{college}}" SELECTED>{{college}}</option>"
+                    {% endfor %}
+                </select><br><br>
+
+                <p>Second college to compare</p>
+                <select name="colleges2" method="GET" action="/">
+                    {% for college in colleges2 %}
+                    <option value= "{{college}}" SELECTED>{{college}}</option>"
+                    {% endfor %}
+                </select><br><br>
+
+
+            <!--
                 <label for="college1">First college to compare</label><br>
                 <input type="text" id="college1" name="college1"><br>
                 <label for="college2">Second college to compare</label><br>
                 <input type="text" id="college2" name="college2"><br><br>
+
+            -->
                 <input type="submit" value="Compare 'em!'"><br><br>
             </form>
             <div class="result">{% if result %}<p>{{result}}</p>{% endif %}</div>
