@@ -19,7 +19,7 @@ def main():
         colleges = links.keys()
         college1 = request.form['colleges1']
         college2 = request.form['colleges2']
-        df = compare(college1, college2, DRIVER_PATH)
+        df = compare(college1, college2, DRIVER_PATH, True)
         # df = df.T
         return flask.render_template('main.html', tables=[df.to_html(classes='data', header="true")], colleges1=colleges, colleges2=colleges)
 

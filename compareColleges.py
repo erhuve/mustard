@@ -66,4 +66,4 @@ def compare(firstCollege, secondCollege = "Indiana Institute of Technology", DRI
         return [dataFirst, dataSecond]
 
 
-print(compare("Stanford University", "University of Southern California", returnDf = True))
+# print(compare("Stanford University", "University of Southern California", returnDf = True))
