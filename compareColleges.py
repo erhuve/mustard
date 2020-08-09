@@ -3,7 +3,7 @@ import pandas as pd
 import os
 from selenium import webdriver
 from scraper import read_data
-
+import numpy as np
 '''
 # Testing
 
@@ -41,7 +41,7 @@ def compare(firstCollege, secondCollege = "Indiana Institute of Technology", DRI
         # print(df)
         df = df.T
         headers = df.iloc[0]
-        df  = pd.DataFrame(df.values[1:], columns=headers)
+        df  = pd.DataFrame(df.values[1:], columns = headers)
         initdfLength = len(df)
         if len(df[df['name'] == firstCollege]) == 0:
             print("Dataframe found but college not found")
@@ -66,4 +66,36 @@ def compare(firstCollege, secondCollege = "Indiana Institute of Technology", DRI
         return [dataFirst, dataSecond]
 
 
-print(compare("Stanford University", "University of Southern California", returnDf = True))
+#print(compare("Stanford University", "University of Southern California", returnDf = True))
+
+
+def convertStringToListNums(string):
+    if(type(string) is list):
+        return string
+    string = string[1: len(string) - 1].replace(" ", "")
+    string_list = string.split(",")
+    map_object = map(int, string_list)
+    return list(map_object)
+
+
+def diversityScore(college):
+    return (5.0 - np.std(np.array(convertStringToListNums(compare(college)[0]["diversity"]))) / 6.28)
+
+
+def costScore(college, preference):
+    return min(6 - float(float(compare(college)[0]["avg_cost"]) / preference), 5)
+
+def publicScore(college, preferences):
+    if compare(college)[0]["public"] in preferences:
+        return 1
+    return 0
+
+def sizeScore(college, preferences):
+    if compare(college)[0]["size"] in preferences:
+        return 1
+    return 0
+
+print(diversityScore("University of Washington-Seattle Campus"))
+print(costScore("University of Washington-Seattle Campus", 12000))
+print(publicScore("University of Washington-Seattle Campus", ["Public", "Private"]))
+print(sizeScore("University of Washington-Seattle Campus", ["Small", "Medium", "Large"]))
