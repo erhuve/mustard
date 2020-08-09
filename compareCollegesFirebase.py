@@ -5,14 +5,14 @@ from scraper import read_data
 import numpy as np
 
 config = {
-        "apiKey": "AIzaSyAiBxG429FT-kZj9tjpAjHlcIo6CDXed7s",
-        "authDomain": "mustard-cba34.firebaseapp.com",
-        "databaseURL": "https://mustard-cba34.firebaseio.com",
-        "projectId": "mustard-cba34",
-        "storageBucket": "mustard-cba34.appspot.com",
-        "messagingSenderId": "445402188887",
-        "appId": "1:445402188887:web:55ea85d4e7ab506a036712",
-        "measurementId": "G-S34T7N2NN7"
+        "apiKey": os.environ.get("APIKEY"),
+        "authDomain": os.environ.get("AUTHDOMAIN"),
+        "databaseURL": os.environ.get("DATABASEURL"),
+        "projectId": os.environ.get("PROJECTID"),
+        "storageBucket": os.environ.get("STORAGEBUCKET"),
+        "messagingSenderId": os.environ.get("MESSAGINGSENDERID"),
+        "appId": os.environ.get("APPID"),
+        "measurementId": os.environ.get("MEASUREMENTID"),
 }
 
 firebase = pyrebase.initialize_app(config)
