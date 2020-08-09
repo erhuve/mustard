@@ -59,6 +59,7 @@ def read_data(name, DRIVER_PATH):
     time.sleep(2)
     college = {}
     college['name'] = driver.find_element_by_xpath('//*[@id="school"]/div[1]/div[2]/div[1]/h1').text
+
     college['degree'] = driver.find_element_by_xpath('//*[@id="school"]/div[1]/div[2]/div[1]/div/ul/li[1]/span').text
     college['public'] = driver.find_element_by_xpath('//*[@id="school"]/div[1]/div[2]/div[1]/div/ul/li[2]/span').text
     college['location_type'] = driver.find_element_by_xpath('//*[@id="school"]/div[1]/div[2]/div[1]/div/ul/li[3]/span').text
@@ -73,10 +74,14 @@ def read_data(name, DRIVER_PATH):
             value = value.replace('$','')
             value = value.replace(',','')
             college['salary'][val] = int(value)
-    cost = driver.find_element_by_xpath('//*[@id="school-avg-cost"]/h2[2]').text
-    cost = cost.replace('$','')
-    cost = cost.replace(',','')
-    college['avg_cost'] = int(cost)
+    cost = driver.find_elements_by_xpath('//*[@id="school-avg-cost"]/h2[2]')
+    if len(cost) > 0:
+        cost[0] = cost[0].text
+        cost[0] = cost[0].replace('$','')
+        cost[0] = cost[0].replace(',','')
+        college['avg_cost'] = int(cost[0])
+    else:
+        college['avg_cost'] = cost
     college['fields'] = driver.find_elements_by_class_name('pa-2')
     for i, field in enumerate(college['fields']):
         college['fields'][i] = field.text

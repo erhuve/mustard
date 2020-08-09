@@ -15,12 +15,13 @@ def main():
         return(flask.render_template('main.html', colleges1=colleges, colleges2=colleges))
 
     if flask.request.method ==  'POST':
+        colleges = links.keys()
         college1 = request.form['colleges1']
         college2 = request.form['colleges2']
         college1 = scraper.read_data(college1, DRIVER_PATH)
         college2 = scraper.read_data(college2, DRIVER_PATH)
         data = [college1, college2]
-        return flask.render_template('main.html', result=data)
+        return flask.render_template('main.html', result=data, colleges1=colleges, colleges2=colleges)
 
 
 
