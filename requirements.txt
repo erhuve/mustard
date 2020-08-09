@@ -4,3 +4,4 @@ pandas
 gunicorn
 selenium
 requests
+pyrebase
