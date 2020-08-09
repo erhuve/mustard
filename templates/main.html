@@ -3,6 +3,16 @@
 <html>
     <head>
         <title>Mustard: Find the right college for you</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+        <script>
+            $(document).ready(function () {
+                $('select').selectize({
+                    sortField: 'text'
+                });
+            });
+        </script>
     </head>
 
     <body>
@@ -10,16 +20,16 @@
             <h1>Compare colleges</h1>
             <form action="{{url_for('main')}}" method='POST'>
                 <p>First college to compare</p>
-                <select name="colleges1" method="GET" action="/">
+                <select name="colleges1" method="GET" action="/" placeholder="Pick a college...">
                     {% for college in colleges1 %}
-                    <option value= "{{college}}" SELECTED>{{college}}</option>"
+                    <option value= "{{college}}">{{college}}</option>"
                     {% endfor %}
                 </select><br><br>
 
                 <p>Second college to compare</p>
-                <select name="colleges2" method="GET" action="/">
+                <select name="colleges2" method="GET" action="/" placeholder="Pick a college...">
                     {% for college in colleges2 %}
-                    <option value= "{{college}}" SELECTED>{{college}}</option>"
+                    <option value= "{{college}}">{{college}}</option>"
                     {% endfor %}
                 </select><br><br>
 
@@ -31,7 +41,7 @@
                 <input type="text" id="college2" name="college2"><br><br>
 
             -->
-                <input type="submit" value="Compare 'em!'"><br><br>
+                <input type="submit" value="Compare 'em!"><br><br>
             </form>
             <div class="result">{% if result %}<p>{{result}}</p>{% endif %}</div>
         </div>
