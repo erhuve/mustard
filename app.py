@@ -1,53 +1,29 @@
-# app.py
+import flask
+import json
+import scraper
+from flask import request, render_template
 
-import os
-from flask import Flask, request, jsonify
-from firebase_admin import credentials, firestore, initialize_app
+app = flask.Flask(__name__, template_folder='templates')
+DRIVER_PATH = '/Users/pastel/Downloads/chromedriverReal'
+with open('links.json') as json_file:
+    links= json.load(json_file)
 
-app = Flask(__name__)
+@app.route('/', methods=['GET', 'POST'])
+def main():
+    if flask.request.method == 'GET':
+        colleges = links.keys()
+        return(flask.render_template('main.html', colleges1=colleges, colleges2=colleges))
 
-#Initializing Firebase DB
-cred = credentials.Certificate('key.json')
-default_app = initialize_app(cred)
-db = firestore.client()
-todo_ref = db.collection('todos')
+    if flask.request.method ==  'POST':
+        colleges = links.keys()
+        college1 = request.form['colleges1']
+        college2 = request.form['colleges2']
+        college1 = scraper.read_data(college1, DRIVER_PATH)
+        college2 = scraper.read_data(college2, DRIVER_PATH)
+        data = [college1, college2]
+        return flask.render_template('main.html', result=data, colleges1=colleges, colleges2=colleges)
 
-@app.route('/add', methods = ['POST'])
-def create():
-    try:
-        id = request.json['id']
-        todo_ref.document(id).set(request.json)
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        return f"An error occurred: {e}"
 
-@app.route('/list', methods = ['GET'])
-def read():
-    try:
-        todo_id = request.args.get('id')
-        if todo_id:
-            todo = todo_ref.document(todo_id).get()
-            return jsonify(todo.to_dict()), 200
-        else:
-            all_todos = [doc.to_dict() for doc in todo_ref.stream()]
-            return jsonify(all_todos), 200
-    except Exception as e:
-        return f"An error occurred: {e}"
 
-@app.route('/update', methods = ['POST', 'PUT'])
-def update():
-    try:
-        id = request.json['id']
-        todo_ref.document(id).update(request.json)
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        return f"An error occurred: {e}"
-
-@app.route('/delete', methods = ['GET', 'DELETE'])
-def delete():
-    try:
-        todo_id = request.args.get('id')
-        todo_ref.document(todo_id).delete()
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        return f"An error occurred: {e}"
+if __name__ == '__main__':
+    app.run()

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Mustard: Find the right college for you</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+        <script>
+            $(document).ready(function () {
+                $('select').selectize({
+                    sortField: 'text'
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        <div id="compare">
+            <h1>Compare colleges</h1>
+            <form action="{{url_for('main')}}" method='POST'>
+                <p>First college to compare</p>
+                <select name="colleges1" method="GET" action="/" placeholder="Pick a college...">
+                    {% for college in colleges1 %}
+                    <option value= "{{college}}">{{college}}</option>"
+                    {% endfor %}
+                </select><br><br>
+
+                <p>Second college to compare</p>
+                <select name="colleges2" method="GET" action="/" placeholder="Pick a college...">
+                    {% for college in colleges2 %}
+                    <option value= "{{college}}">{{college}}</option>"
+                    {% endfor %}
+                </select><br><br>
+
+
+            <!--
+                <label for="college1">First college to compare</label><br>
+                <input type="text" id="college1" name="college1"><br>
+                <label for="college2">Second college to compare</label><br>
+                <input type="text" id="college2" name="college2"><br><br>
+
+            -->
+                <input type="submit" value="Compare 'em!"><br><br>
+            </form>
+            <div class="result">{% if result %}<p>{{result}}</p>{% endif %}</div>
+        </div>
+        <div id="recommend">
+            <h1>Find colleges</h1>
+            <form action="{{url_for('main')}}" method='POST'>
+                <label for="field">What do you want to study?</label><br>
+                <input type="text" id="field" name="field"><br>
+
+                <p>Public or Private?</p>
+                <input type="checkbox" id="public" name="public" value="Public">
+                <label for="public">Public</label><br>
+                <input type="checkbox" id="private" name="private" value="Private">
+                <label for="private">Private</label><br>
+                <input type="checkbox" id="forprofit" name="forprofit" value="ForProfit">
+                <label for="forprofit">For Profit</label>
+
+                <p>Size?</p>
+                <input type="checkbox" id="small" name="small" value="Small">
+                <label for="small">Small</label><br>
+                <input type="checkbox" id="medium" name="medium" value="Medium">
+                <label for="medium">Medium</label><br>
+                <input type="checkbox" id="large" name="large" value="Large">
+                <label for="large">Large</label>
+
+                <p>Urbanicity?</p>
+                <input type="checkbox" id="city" name="city" value="City">
+                <label for="city">City</label><br>
+                <input type="checkbox" id="suburban" name="suburban" value="Suburban">
+                <label for="suburban">Suburban</label><br>
+                <input type="checkbox" id="town" name="town" value="Town">
+                <label for="town">Town</label><br>
+                <input type="checkbox" id="rural" name="rural" value="Rural">
+                <label for="rural">Rural</label><br><br>
+
+                <label for="salary">Salary goal</label><br>
+                <input type="range" id="salary" name="salary" min="0" max="150000" oninput="salaryOut.value = salary.value"><br>
+                <input name="salaryOut" id="salaryOut"></input><br><br>
+
+                <label for="cost">Yearly cost preference</label><br>
+                <input type="range" id="cost" name="cost" min="0" max="120000" oninput="costOut.value = cost.value"><br>
+                <input name="costOut" id="costOut"></input><br>
+
+                <p>Is diversity important to you?</p>
+                <input type="radio" id="diverse" name="diversity" value="diverse">
+                <label for="diverse">Yes</label>
+                <input type="radio" id="notdiverse" name="diversity" value="notdiverse">
+                <label for="notdiverse">No</label><br><br>
+
+                <input type="submit" value="Show me colleges!">
+            </form>
+        </div>
+    </body>
+</html>
