@@ -48,6 +48,6 @@ else:
 
 #print(f"First college data is {dataFirst}")
 #print(f"Second college data is {dataSecond}")
-compare_colleges(dataFirst, dataSecond)
+#compare_colleges(dataFirst, dataSecond)
 if len(df) > initdfLength:
     df.to_csv('college_db.csv')

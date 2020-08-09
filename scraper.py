@@ -64,16 +64,30 @@ def read_data(name, DRIVER_PATH):
     college['public'] = driver.find_element_by_xpath('//*[@id="school"]/div[1]/div[2]/div[1]/div/ul/li[2]/span').text
     college['location_type'] = driver.find_element_by_xpath('//*[@id="school"]/div[1]/div[2]/div[1]/div/ul/li[3]/span').text
     college['size'] = driver.find_element_by_xpath('//*[@id="school"]/div[1]/div[2]/div[1]/div/ul/li[4]/span').text
-    college['salary'] = driver.find_elements_by_xpath('//*[@id="school-salary-after-complete"]/div/div/div/div/span[4]/span')
+    low_salary = driver.find_elements_by_xpath('//*[@id="school-salary-after-complete"]/div/div/div/div/span[4]/span')
+    high_salary = driver.find_elements_by_xpath('//*[@id="school-salary-after-complete"]/div/div/div/div/span[6]/span')
+    salary = 0
+    hits = 0
 
-    for val in range(len(college['salary'])):
-        college['salary'][val] = college['salary'][val].text
-    for val in range(len(college['salary'])):
-        if college['salary'][val] is not None:
-            value = college['salary'][val]
-            value = value.replace('$','')
-            value = value.replace(',','')
-            college['salary'][val] = int(value)
+    if len(low_salary) != 0:
+        low_salary_ = low_salary[0].text
+        low_salary_ = low_salary_.replace('$','')
+        low_salary_ = low_salary_.replace(',','')
+        salary += int(low_salary_)
+        hits += 1
+
+    if len(high_salary) != 0:
+        high_salary_ = high_salary[0].text
+        high_salary_ = high_salary_.replace('$','')
+        high_salary_ = high_salary_.replace(',','')
+        salary += int(high_salary_)
+        hits += 1
+
+    if salary > 0:
+        salary /= hits
+
+    college['salary'] = salary
+
     cost = driver.find_elements_by_xpath('//*[@id="school-avg-cost"]/h2[2]')
     if len(cost) > 0:
         cost[0] = cost[0].text
