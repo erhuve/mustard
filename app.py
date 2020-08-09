@@ -1,7 +1,7 @@
 import flask
 import json
 import pandas as pd
-from compareColleges import compare, calculate
+from compareCollegesFirebase import getDataForCollege, calculate
 from flask import request, render_template
 
 app = flask.Flask(__name__, template_folder='templates')
@@ -52,24 +52,32 @@ def main():
         if request.form.get('rural'):
             urbanicity.append('Rural')
 
-        df = compare(college1, college2, DRIVER_PATH, True)
-        college_list = compare(college1, college2, DRIVER_PATH, False)
+        c1_dict = getDataForCollege(college1)
+        c2_dict = getDataForCollege(college2)
+        df = pd.DataFrame([c1_dict, c2_dict]).T
+        college_list = [c1_dict, c2_dict]
 
         scores = calculate(college_list, field, salary, cost, diversity, size, urbanicity, public)
         scores_sum = [0,0]
         if type(scores[0][0]) is not str:
             for score in scores[0]:
                 scores_sum[0] += score
+            if not diversity:
+                scores_sum[0] -= scores[0][3]
+            
         if type(scores[1][0]) is not str:
             for score in scores[1]:
                 scores_sum[1] += score
+            if not diversity:
+                scores_sum[1] -= scores[1][3]
         
         winner_index = 0
         if scores_sum[1] > scores_sum[0]:
             winner_index = 1
         
         recommendation = 'Our recommendation: ' + college_list[winner_index]['name']
-        
+        if not diversity:
+            recommendation += ' (Diversity score was calculated but not included in the total)'
 
         score_df = pd.DataFrame([['Total score', scores_sum[0], scores_sum[1]],
                     ['Field of study score',scores[0][0],scores[1][0]],

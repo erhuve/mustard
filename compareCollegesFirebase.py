@@ -75,7 +75,7 @@ def calculate(listcollegesDict, field, salary, cost, diversity, size, urbanicity
             collegeScores.append(['We don\'t have enough information to score this college for you' for i in range(7)])
             continue
         diversityScore = (5.0 - np.std(np.array(collegeDict["diversity"]) / 6.28))
-        costScore = min(6 - float(collegeDict["avg_cost"]) / cost, 5)
+        costScore = min(6 - float(collegeDict["avg_cost"]) / float(cost), 5)
         publicScore = 0
         if collegeDict["public"] in public:
             publicScore = 1
@@ -105,4 +105,4 @@ def getAllScoresForColleges(college1, college2, field, salary, cost, diversity, 
 #print(costScore("Massachusetts Institute of Technology", 12000))
 #print(publicScore("Massachusetts Institute of Technology", ["Public", "Private"]))
 #print(sizeScore("Massachusetts Institute of Technology", ["Small", "Medium"]))
-print(getAllScoresForColleges("Stanford University", "Massachusetts Institute of Technology", "Computer Science - Bachelor's Degree", 100000, 20000, True, ["Small"], ["Suburban"], ["Public"]))
+# print(getAllScoresForColleges("Stanford University", "Massachusetts Institute of Technology", "Computer Science - Bachelor's Degree", 100000, 20000, True, ["Small"], ["Suburban"], ["Public"]))

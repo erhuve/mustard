@@ -63,6 +63,19 @@
                 milestone in one's life, and it's important we get it right. Compare colleges from a database 
                 of over 5000 U.S. colleges and find the right college for you.
             </p>
+            <div class="result">
+                <!--
+                
+                -->
+                
+                {% if result %}<p><strong>{{result}}</strong></p>{% endif %}
+                {% for res in results %}
+                    {{ res|safe }}
+                {% endfor %}
+                {% for table in tables %}
+                    {{ table|safe }}
+                {% endfor %}
+            </div>
             <form action="{{url_for('main')}}" method='POST'>
                 <p>First college to compare</p>
                 <select name="colleges1" method="GET" action="/" placeholder="Pick a college...">
@@ -132,18 +145,6 @@
                 <input type="submit" value="Compare 'em!"><br><br>
                 <p>Note: This calculation may take some time if this is a completely new search</p>
             </form>
-            <div class="result">
-                <!--
-                
-                -->
-                {% for table in tables %}
-                    {{ table|safe }}
-                {% endfor %}
-                {% if result %}<p><strong>{{result}}</strong></p>{% endif %}
-                {% for res in results %}
-                    {{ res|safe }}
-                {% endfor %}
-            </div>
             
         </div>
     <!--
