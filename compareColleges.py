@@ -42,7 +42,6 @@ def compare(firstCollege, secondCollege, DRIVER_PATH):
         df = df.T
         headers = df.iloc[0]
         df  = pd.DataFrame(df.values[1:], columns=headers)
-        df.to_csv('testthrowaway.csv')
         initdfLength = len(df)
         if len(df[df['name'] == firstCollege]) == 0:
             print("Dataframe found but college not found")
