@@ -43,7 +43,14 @@
             -->
                 <input type="submit" value="Compare 'em!"><br><br>
             </form>
-            <div class="result">{% if result %}<p>{{result}}</p>{% endif %}</div>
+            <div class="result">
+                <!--
+                {% if result %}<p>{{result}}</p>{% endif %}
+                -->
+                {% for table in tables %}
+                    {{ table|safe }}
+                {% endfor %}
+            </div>
         </div>
         <div id="recommend">
             <h1>Find colleges</h1>
