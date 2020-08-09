@@ -3,3 +3,4 @@ flask
 pandas
 gunicorn
 selenium
+requests
