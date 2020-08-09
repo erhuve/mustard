@@ -68,44 +68,41 @@ def sizeScore(college, preferences):
         return 1
     return 0
 
-def calculate(colleges, field, salary, urbanicity):
-    print(field)
-    college_scores = []
-    for college in colleges:
-        field_score = 0
-
-        if type(college['fields']) is list:
-            for rank, study in enumerate(college['fields']):
-                if study == field:
-                    field_score = max(10 - rank, 0)
-        else:      
-            fields = college['fields'].replace('[','')
-            fields = fields.replace(']','')
-            fields = fields.split('",',)
-
-            for rank, study in enumerate(fields):
-
-                study = study.replace('"','')
-                study = study.strip()
-
-                if study == field:
-
-                    field_score = max(10 - rank, 0)
-
-        salary_score = min(float(college['salary']) / salary * 5, 5)
-
+def calculate(listcollegesDict, field, salary, cost, diversity, size, urbanicity, public):
+    collegeScores = []
+    for collegeDict in listcollegesDict:
+        if collegeDict['salary'] == 0 or collegeDict['avg_cost'] == '[]' or type(collegeDict['avg_cost']) is list:
+            collegeScores.append(['We don\'t have enough information to score this college for you' for i in range(7)])
+            continue
+        diversityScore = (5.0 - np.std(np.array(collegeDict["diversity"]) / 6.28))
+        costScore = min(6 - float(collegeDict["avg_cost"]) / cost, 5)
+        publicScore = 0
+        if collegeDict["public"] in public:
+            publicScore = 1
+        collegeSize = collegeDict["size"]
+        sizeScore = 0
+        if collegeSize in size:
+            sizeScore = 1
+        salary_score = min(float(collegeDict['salary']) / float(salary) * 5, 5)
         urban_score = 0
-        urbanicity = set(urbanicity)
-        if college['location_type'] in urbanicity:
+        if collegeDict['location_type'] in urbanicity:
             urban_score += 1
-        
-        college_scores.append([field_score, salary_score, urban_score])
-    return college_scores
-#print(diversityScore("Stanford University"))
-#print(costScore("Stanford University", 12000))
-#print(publicScore("Stanford University", ["Public", "Private"]))
-#print(sizeScore("Stanford University", ["Small", "Medium"]))
+        field_score = 0
+        for rank, study in enumerate(collegeDict['fields']):
+            if study == field:
+                field_score = max(10 - rank, 0)
+        collegeScores.append([field_score, salary_score, costScore, diversityScore, sizeScore, urban_score, publicScore])
+    return collegeScores
 
+    
+def getAllScoresForColleges(college1, college2, field, salary, cost, diversity, size, urbanicity, public):
+    college1Dict = getDataForCollege(college1)
+    college2Dict = getDataForCollege(college2)
+    scores = calculate([college1Dict, college2Dict], field, salary, cost, diversity, size, urbanicity, public)
+    return scores
 
-
-
+#print(diversityScore("Massachusetts Institute of Technology"))
+#print(costScore("Massachusetts Institute of Technology", 12000))
+#print(publicScore("Massachusetts Institute of Technology", ["Public", "Private"]))
+#print(sizeScore("Massachusetts Institute of Technology", ["Small", "Medium"]))
+print(getAllScoresForColleges("Stanford University", "Massachusetts Institute of Technology", "Computer Science - Bachelor's Degree", 100000, 20000, True, ["Small"], ["Suburban"], ["Public"]))
