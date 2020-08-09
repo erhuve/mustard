@@ -6,6 +6,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+        <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
         <script>
             $(document).ready(function () {
                 $('select').selectize({
@@ -13,11 +14,55 @@
                 });
             });
         </script>
+        <style>
+            body {
+                font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            }
+
+            h1 {
+                font-family: 'Sofia';
+                font-size: 58px;
+                background-image: linear-gradient(to right,#FFDB58,#E1AD01);
+                color: white;
+                text-shadow: 1px 1px #000;
+            }
+
+            .dataframe { 
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            .dataframe th, .dataframe td {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            .dataframe tr:nth-child(even){background-color: #f2f2f2;}
+            .dataframe tr:hover {background-color: #ddd;}
+
+            .dataframe th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #FFDB58;
+                color: white;
+                text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            }
+        </style>
     </head>
 
     <body>
         <div id="compare">
-            <h1>Compare colleges</h1>
+            <h1>&nbsp;Mustard</h1>
+            <h3>Find the right college for you</h3>
+            <p>The mustard seed comes in many colors- white, yellow, brown, black. Whether they are whole,
+                ground, cracked, or bruised, mustard seeds can be mixed with all sorts of ingredients,
+                be it vinegar, wine, salt, cumin, or even a Computer Science degree. And with different 
+                combinations, you can achieve different flavors from sweet to spicy. Students are a lot like 
+                mustard seeds, and we're on a mission to find the right recipe for you. College is a big 
+                milestone in one's life, and it's important we get it right. Compare colleges from a database 
+                of over 5000 U.S. colleges and find the right college for you.
+            </p>
             <form action="{{url_for('main')}}" method='POST'>
                 <p>First college to compare</p>
                 <select name="colleges1" method="GET" action="/" placeholder="Pick a college...">
@@ -33,29 +78,7 @@
                     {% endfor %}
                 </select><br><br>
 
-
-            <!--
-                <label for="college1">First college to compare</label><br>
-                <input type="text" id="college1" name="college1"><br>
-                <label for="college2">Second college to compare</label><br>
-                <input type="text" id="college2" name="college2"><br><br>
-
-            -->
-                <input type="submit" value="Compare 'em!"><br><br>
-            </form>
-            <div class="result">
-                <!--
-                {% if result %}<p>{{result}}</p>{% endif %}
-                -->
-                {% for table in tables %}
-                    {{ table|safe }}
-                {% endfor %}
-            </div>
-        </div>
-        <div id="recommend">
-            <h1>Find colleges</h1>
-            <form action="{{url_for('main')}}" method='POST'>
-                <label for="field">What do you want to study?</label><br>
+                <label for="field">What do you want to study? (Note: This score is determined by popularity of the major at the school)</label><br>
                 <input type="text" id="field" name="field"><br>
 
                 <p>Public or Private?</p>
@@ -93,13 +116,45 @@
                 <input type="number" name="costOut" value="0" oninput="this.form.cost.value=this.value"></input><br>
 
                 <p>Is diversity important to you?</p>
-                <input type="radio" id="diverse" name="diversity" value="diverse">
+                <input type="radio" id="diverse" name="diverse" value="diverse">
                 <label for="diverse">Yes</label>
-                <input type="radio" id="notdiverse" name="diversity" value="notdiverse">
+                <input type="radio" id="notdiverse" name="diverse" value="notdiverse">
                 <label for="notdiverse">No</label><br><br>
+
+
+            <!--
+                <label for="college1">First college to compare</label><br>
+                <input type="text" id="college1" name="college1"><br>
+                <label for="college2">Second college to compare</label><br>
+                <input type="text" id="college2" name="college2"><br><br>
+
+            -->
+                <input type="submit" value="Compare 'em!"><br><br>
+                <p>Note: This calculation may take some time if this is a completely new search</p>
+            </form>
+            <div class="result">
+                <!--
+                
+                -->
+                {% for table in tables %}
+                    {{ table|safe }}
+                {% endfor %}
+                {% if result %}<p><strong>{{result}}</strong></p>{% endif %}
+                {% for res in results %}
+                    {{ res|safe }}
+                {% endfor %}
+            </div>
+            
+        </div>
+    <!--
+        <div id="recommend">
+            <h1>Find colleges</h1>
+            <form action="{{url_for('main')}}" method='POST'>
+                
 
                 <input type="submit" value="Show me colleges!">
             </form>
         </div>
+    -->
     </body>
 </html>
