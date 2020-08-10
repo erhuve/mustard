@@ -3,16 +3,18 @@ import pandas as pd
 import os
 from scraper import read_data
 import numpy as np
+import json
+
 
 config = {
-        "apiKey": "AIzaSyAiBxG429FT-kZj9tjpAjHlcIo6CDXed7s",
-        "authDomain": "mustard-cba34.firebaseapp.com",
-        "databaseURL": "https://mustard-cba34.firebaseio.com",
-        "projectId": "mustard-cba34",
-        "storageBucket": "mustard-cba34.appspot.com",
-        "messagingSenderId": "445402188887",
-        "appId": "1:445402188887:web:55ea85d4e7ab506a036712",
-        "measurementId": "G-S34T7N2NN7"
+        "apiKey": os.environ.get("APIKEY"),
+        "authDomain": os.environ.get("AUTHDOMAIN"),
+        "databaseURL": os.environ.get("DATABASEURL"),
+        "projectId": os.environ.get("PROJECTID"),
+        "storageBucket": os.environ.get("STORAGEBUCKET"),
+        "messagingSenderId": os.environ.get("MESSAGINGSENDERID"),
+        "appId": os.environ.get("APPID"),
+        "measurementId": os.environ.get("MEASUREMENTID"),
 }
 
 firebase = pyrebase.initialize_app(config)
@@ -45,8 +47,19 @@ def getDataForCollege(college, DRIVER_PATH = 'chromedriver'):
 
     return collegeDict
 
-
-
+def getAllCollegeDicts():
+    collegeDicts = []
+    allDicts = db.child("colleges").get()
+    #print(f"Length of dictionaries is {len(allDicts)}")
+    for college in allDicts.each():
+        #print(F"College Key: {college.key()}, College Value: {college.val()}, type of college value: {type(college.val())}")
+        keys = college.val().keys()
+        for key in keys:
+            collegeDicts.append(college.val()[key])
+            break
+    #print(f"Length of first entry is {len(collegeDicts[0])}")
+    return collegeDicts
+#getAllCollegeDicts()
 #print(getDataForCollege("Massachusetts Institute of Technology"))
 
 def diversityScore(college):
@@ -75,7 +88,7 @@ def calculate(listcollegesDict, field, salary, cost, diversity, size, urbanicity
             collegeScores.append(['We don\'t have enough information to score this college for you' for i in range(7)])
             continue
         diversityScore = (5.0 - np.std(np.array(collegeDict["diversity"]) / 6.28))
-        costScore = min(6 - float(collegeDict["avg_cost"]) / cost, 5)
+        costScore = min(6 - float(collegeDict["avg_cost"]) / float(cost), 5)
         publicScore = 0
         if collegeDict["public"] in public:
             publicScore = 1
@@ -93,16 +106,61 @@ def calculate(listcollegesDict, field, salary, cost, diversity, size, urbanicity
                 field_score = max(10 - rank, 0)
         collegeScores.append([field_score, salary_score, costScore, diversityScore, sizeScore, urban_score, publicScore])
     return collegeScores
-
-    
+	    
 def getAllScoresForColleges(college1, college2, field, salary, cost, diversity, size, urbanicity, public):
     college1Dict = getDataForCollege(college1)
     college2Dict = getDataForCollege(college2)
     scores = calculate([college1Dict, college2Dict], field, salary, cost, diversity, size, urbanicity, public)
     return scores
 
+def coldRecommend(college_list, no_recs, field, salary, cost, diversity, size, urbanicity, public):
+    filtered = []
+    
+    for college in college_list:
+        # This will ensure size, urbanicity, public/private match,
+        # and that there is existing cost and salary data
+        if 'avg_cost' not in college or 'fields' not in college or 'salary' not in college or 'diversity' not in college or 'size' not in college or 'location_type' not in college or 'public' not in college:
+            continue
+        if type(college['avg_cost']) is not list and type(college['salary']) is not list and college['salary'] > 0 and college['size'] in size and college['location_type'] in urbanicity and college['public'] in public:
+            filtered.append(college)
+    # Map list for calculating
+    indices = {}
+    for i, college in enumerate(filtered):
+        indices[i] = college['name']
+    scores = calculate(filtered, field, salary, cost, diversity, size, urbanicity, public)
+    for i in range(len(scores)):
+        scores[i] = np.sum(scores[i])
+    no_recs = min(no_recs, len(scores) - 1)
+    recs = np.argpartition(scores, -no_recs)[-no_recs:]
+    recs_final = []
+    for index in recs:
+        recs_final.append(indices[index])
+        
+    return recs_final
+
+def getUniqueMajors():
+    if not os.path.exists("unique_majors.json"):
+        allDicts = getAllCollegeDicts()
+        fieldsOfStudy = []
+        for collegeDict in allDicts:
+            if "fields" in collegeDict.keys():
+                for fields in collegeDict["fields"]:
+                    fieldsOfStudy.append(fields)
+        setOfFields = list(set(fieldsOfStudy))
+        jsonDict = {"Unique Fields": list(setOfFields)}
+        with open("unique_majors.json", 'w') as f:
+            json.dump(jsonDict, f)
+            f.close()
+    else:
+        print("Loading data from file")
+        setOfFields = []
+        with open("unique_majors.json") as f:
+            data = json.load(f)
+            setOfFields = data["Unique Fields"]
+    return setOfFields
+#print(len(getUniqueMajors()))
 #print(diversityScore("Massachusetts Institute of Technology"))
 #print(costScore("Massachusetts Institute of Technology", 12000))
 #print(publicScore("Massachusetts Institute of Technology", ["Public", "Private"]))
 #print(sizeScore("Massachusetts Institute of Technology", ["Small", "Medium"]))
-#print(getAllScoresForColleges("Stanford University", "Massachusetts Institute of Technology", "Computer Science - Bachelor's Degree", 100000, 20000, True, ["Small"], ["Suburban"], ["Public"]))
+# print(getAllScoresForColleges("Stanford University", "Massachusetts Institute of Technology", "Computer Science - Bachelor's Degree", 100000, 20000, True, ["Small"], ["Suburban"], ["Public"]))
