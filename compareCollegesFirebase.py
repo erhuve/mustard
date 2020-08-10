@@ -3,6 +3,8 @@ import pandas as pd
 import os
 from scraper import read_data
 import numpy as np
+import json
+
 
 config = {
         "apiKey": os.environ.get("APIKEY"),
@@ -134,7 +136,27 @@ def coldRecommend(college_list, no_recs, field, salary, cost, diversity, size, u
         
     return recs_final
 
-
+def getUniqueMajors():
+    if not os.path.exists("unique_majors.json"):
+        allDicts = getAllCollegeDicts()
+        fieldsOfStudy = []
+        for collegeDict in allDicts:
+            if "fields" in collegeDict.keys():
+                for fields in collegeDict["fields"]:
+                    fieldsOfStudy.append(fields)
+        setOfFields = list(set(fieldsOfStudy))
+        jsonDict = {"Unique Fields": list(setOfFields)}
+        with open("unique_majors.json", 'w') as f:
+            json.dump(jsonDict, f)
+            f.close()
+    else:
+        print("Loading data from file")
+        setOfFields = []
+        with open("unique_majors.json") as f:
+            data = json.load(f)
+            setOfFields = data["Unique Fields"]
+    return setOfFields
+#print(len(getUniqueMajors()))
 #print(diversityScore("Massachusetts Institute of Technology"))
 #print(costScore("Massachusetts Institute of Technology", 12000))
 #print(publicScore("Massachusetts Institute of Technology", ["Public", "Private"]))
