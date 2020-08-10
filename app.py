@@ -56,7 +56,7 @@ def main():
             urbanicity.append('Rural')
 
         if request.form.get('cold'):
-            recs = coldRecommend(getAllCollegeDicts(), 3, field, salary, cost, diversity, size, urbanicity, public)
+            recs = coldRecommend(getAllCollegeDicts(), 5, field, salary, cost, diversity, size, urbanicity, public)
             res = 'Our recommendations for you: '
             for rec in recs:
                 res += '---' + rec + '--- '
