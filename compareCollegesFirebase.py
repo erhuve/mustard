@@ -101,6 +101,29 @@ def getAllScoresForColleges(college1, college2, field, salary, cost, diversity, 
     scores = calculate([college1Dict, college2Dict], field, salary, cost, diversity, size, urbanicity, public)
     return scores
 
+def coldRecommend(college_list, no_recs, field, salary, cost, diversity, size, urbanicity, public):
+    filtered = []
+    for college in college_list:
+        # This will ensure size, urbanicity, public/private match,
+        # and that there is existing cost and salary data
+        if type(college['avg_cost']) is not list and type(college['salary']) is not list and college['salary'] > 0 and college['size'] in size and college['location_type'] in urbanicity and college['public'] in public:
+            filtered.append(college)
+    # Map list for calculating
+    indices = {}
+    for i, college in enumerate(filtered):
+        indices[i] = college['name']
+    scores = calculate(filtered, field, salary, cost, diversity, size, urbanicity, public)
+    for i in range(len(scores)):
+        scores[i] = np.sum(scores[i])
+    no_recs = min(no_recs, len(scores) - 1)
+    recs = np.argpartition(scores, -no_recs)[no_recs:]
+    recs_final = []
+    for index in recs:
+        recs_final.append(indices[index])
+        
+    return recs_final
+
+
 #print(diversityScore("Massachusetts Institute of Technology"))
 #print(costScore("Massachusetts Institute of Technology", 12000))
 #print(publicScore("Massachusetts Institute of Technology", ["Public", "Private"]))
