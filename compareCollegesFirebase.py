@@ -105,4 +105,4 @@ def getAllScoresForColleges(college1, college2, field, salary, cost, diversity, 
 #print(costScore("Massachusetts Institute of Technology", 12000))
 #print(publicScore("Massachusetts Institute of Technology", ["Public", "Private"]))
 #print(sizeScore("Massachusetts Institute of Technology", ["Small", "Medium"]))
-print(getAllScoresForColleges("Stanford University", "Massachusetts Institute of Technology", "Computer Science - Bachelor's Degree", 100000, 20000, True, ["Small"], ["Suburban"], ["Public"]))
+#print(getAllScoresForColleges("Stanford University", "Massachusetts Institute of Technology", "Computer Science - Bachelor's Degree", 100000, 20000, True, ["Small"], ["Suburban"], ["Public"]))
