@@ -3,7 +3,7 @@ import pandas as pd
 import os
 from scraper import read_data
 import numpy as np
-
+"""
 config = {
         "apiKey": os.environ.get("APIKEY"),
         "authDomain": os.environ.get("AUTHDOMAIN"),
@@ -14,7 +14,17 @@ config = {
         "appId": os.environ.get("APPID"),
         "measurementId": os.environ.get("MEASUREMENTID"),
 }
-
+"""
+config = {
+    "apiKey": "AIzaSyAiBxG429FT-kZj9tjpAjHlcIo6CDXed7s",
+    "authDomain": "mustard-cba34.firebaseapp.com",
+    "databaseURL": "https://mustard-cba34.firebaseio.com",
+    "projectId": "mustard-cba34",
+    "storageBucket": "mustard-cba34.appspot.com",
+    "messagingSenderId": "445402188887",
+    "appId": "1:445402188887:web:55ea85d4e7ab506a036712",
+    "measurementId": "G-S34T7N2NN7"
+}
 firebase = pyrebase.initialize_app(config)
 
 db = firebase.database()
@@ -45,8 +55,19 @@ def getDataForCollege(college, DRIVER_PATH = 'chromedriver'):
 
     return collegeDict
 
-
-
+def getAllCollegeDicts():
+    collegeDicts = []
+    allDicts = db.child("colleges").get()
+    #print(f"Length of dictionaries is {len(allDicts)}")
+    for college in allDicts.each():
+        #print(F"College Key: {college.key()}, College Value: {college.val()}, type of college value: {type(college.val())}")
+        keys = college.val().keys()
+        for key in keys:
+            collegeDicts.append(college.val()[key])
+            break
+    #print(f"Length of first entry is {len(collegeDicts[0])}")
+    return collegeDicts
+#getAllCollegeDicts()
 #print(getDataForCollege("Massachusetts Institute of Technology"))
 
 def diversityScore(college):
@@ -93,8 +114,7 @@ def calculate(listcollegesDict, field, salary, cost, diversity, size, urbanicity
                 field_score = max(10 - rank, 0)
         collegeScores.append([field_score, salary_score, costScore, diversityScore, sizeScore, urban_score, publicScore])
     return collegeScores
-
-    
+	    
 def getAllScoresForColleges(college1, college2, field, salary, cost, diversity, size, urbanicity, public):
     college1Dict = getDataForCollege(college1)
     college2Dict = getDataForCollege(college2)
