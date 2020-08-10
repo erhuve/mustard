@@ -48,6 +48,12 @@
                 color: white;
                 text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
             }
+
+            .ourrecommendation {
+                background-image: linear-gradient(to right,#FFDB58,#E1AD01);
+                color: white;
+                text-shadow: 1px 1px #000;
+            }
         </style>
     </head>
 
@@ -57,18 +63,18 @@
             <h3>Find the right college for you</h3>
             <p>The mustard seed comes in many colors- white, yellow, brown, black. Whether they are whole,
                 ground, cracked, or bruised, mustard seeds can be mixed with all sorts of ingredients,
-                be it vinegar, wine, salt, cumin, or even a Computer Science degree. And with different 
+                be it vinegar, wine, salt, cumin, or even a Computer Science degree, to make mustard. And with different 
                 combinations, you can achieve different flavors from sweet to spicy. Students are a lot like 
                 mustard seeds, and we're on a mission to find the right recipe for you. College is a big 
                 milestone in one's life, and it's important we get it right. Compare colleges from a database 
-                of over 5000 U.S. colleges and find the right college for you.
+                of over 5000 U.S. schools and find the right college for you.
             </p>
             <div class="result">
                 <!--
                 
                 -->
                 
-                {% if result %}<p><strong>{{result}}</strong></p>{% endif %}
+                {% if result %}<p class="ourrecommendation"><strong>{{result}}</strong></p>{% endif %}
                 {% for res in results %}
                     {{ res|safe }}
                 {% endfor %}
@@ -77,12 +83,16 @@
                 {% endfor %}
             </div>
             <form action="{{url_for('main')}}" method='POST'>
+                <h2>Get recommendations, or compare two colleges of your own choice</h2>
+                <input type="checkbox" id="cold" name="cold" value="cold">
+                <label for="cold">I just want recommendations- I don't know what colleges to compare</label><br>
+                
                 <p>First college to compare</p>
                 <select name="colleges1" method="GET" action="/" placeholder="Pick a college...">
                     {% for college in colleges1 %}
                     <option value= "{{college}}">{{college}}</option>"
                     {% endfor %}
-                </select><br><br>
+                </select><br>
 
                 <p>Second college to compare</p>
                 <select name="colleges2" method="GET" action="/" placeholder="Pick a college...">
@@ -91,8 +101,12 @@
                     {% endfor %}
                 </select><br><br>
 
-                <label for="field">What do you want to study? (Note: This score is determined by popularity of the major at the school)</label><br>
-                <input type="text" id="field" name="field"><br>
+                <p>What do you want to study? (Note: This score is determined by popularity of the major at the school)</p><br>
+                <select name="field" method="GET" action="/" placeholder="Pick a major...">
+                    {% for fieldoption in fieldlist %}
+                    <option value= "{{fieldoption}}">{{fieldoption}}</option>"
+                    {% endfor %}
+                </select><br>
 
                 <p>Public or Private?</p>
                 <input type="checkbox" id="public" name="public" value="Public">

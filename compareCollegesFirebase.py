@@ -17,7 +17,6 @@ config = {
         "measurementId": os.environ.get("MEASUREMENTID"),
 }
 
-
 firebase = pyrebase.initialize_app(config)
 
 db = firebase.database()
@@ -116,9 +115,12 @@ def getAllScoresForColleges(college1, college2, field, salary, cost, diversity, 
 
 def coldRecommend(college_list, no_recs, field, salary, cost, diversity, size, urbanicity, public):
     filtered = []
+    
     for college in college_list:
         # This will ensure size, urbanicity, public/private match,
         # and that there is existing cost and salary data
+        if 'avg_cost' not in college or 'fields' not in college or 'salary' not in college or 'diversity' not in college or 'size' not in college or 'location_type' not in college or 'public' not in college:
+            continue
         if type(college['avg_cost']) is not list and type(college['salary']) is not list and college['salary'] > 0 and college['size'] in size and college['location_type'] in urbanicity and college['public'] in public:
             filtered.append(college)
     # Map list for calculating
@@ -129,7 +131,7 @@ def coldRecommend(college_list, no_recs, field, salary, cost, diversity, size, u
     for i in range(len(scores)):
         scores[i] = np.sum(scores[i])
     no_recs = min(no_recs, len(scores) - 1)
-    recs = np.argpartition(scores, -no_recs)[no_recs:]
+    recs = np.argpartition(scores, -no_recs)[-no_recs:]
     recs_final = []
     for index in recs:
         recs_final.append(indices[index])

@@ -1,7 +1,7 @@
 import flask
 import json
 import pandas as pd
-from compareCollegesFirebase import getDataForCollege, calculate
+from compareCollegesFirebase import getDataForCollege, calculate, coldRecommend, getAllCollegeDicts, getUniqueMajors
 from flask import request, render_template
 
 app = flask.Flask(__name__, template_folder='templates')
@@ -13,12 +13,15 @@ with open('links.json') as json_file:
 def main():
     if flask.request.method == 'GET':
         colleges = links.keys()
-        return(flask.render_template('main.html', colleges1=colleges, colleges2=colleges))
+        fieldlist = getUniqueMajors()
+        return(flask.render_template('main.html', colleges1=colleges, colleges2=colleges, fieldlist=fieldlist))
 
     if flask.request.method ==  'POST':
         colleges = links.keys()
+        fieldlist = getUniqueMajors()
         college1 = request.form['colleges1']
         college2 = request.form['colleges2']
+
         field = request.form['field']
         salary = request.form['salary']
         cost = request.form['cost']
@@ -51,6 +54,16 @@ def main():
             urbanicity.append('Town')
         if request.form.get('rural'):
             urbanicity.append('Rural')
+
+        if request.form.get('cold'):
+            recs = coldRecommend(getAllCollegeDicts(), 3, field, salary, cost, diversity, size, urbanicity, public)
+            res = 'Our recommendations for you: '
+            for rec in recs:
+                res += '---' + rec + '--- '
+            if len(recs) < 1:
+                res = 'We couldn\'t find a match for you. :('
+            return(flask.render_template('main.html', colleges1=colleges, colleges2=colleges, result=res, fieldlist=fieldlist))
+
 
         c1_dict = getDataForCollege(college1)
         c2_dict = getDataForCollege(college2)
@@ -89,7 +102,7 @@ def main():
                     ['Public/Private score',scores[0][6],scores[1][6]]],
                     columns = ['Criteria', college1, college2])
         # df = df.T
-        return flask.render_template('main.html', tables=[df.to_html(classes='data', header="true")], colleges1=colleges, colleges2=colleges, results=[score_df.to_html(classes='data', header="true")], result=recommendation)
+        return flask.render_template('main.html', tables=[df.to_html(classes='data', header="true")], colleges1=colleges, colleges2=colleges, results=[score_df.to_html(classes='data', header="true")], result=recommendation, fieldlist=fieldlist)
 
 
 
