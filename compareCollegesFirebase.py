@@ -3,7 +3,7 @@ import pandas as pd
 import os
 from scraper import read_data
 import numpy as np
-"""
+
 config = {
         "apiKey": os.environ.get("APIKEY"),
         "authDomain": os.environ.get("AUTHDOMAIN"),
@@ -14,6 +14,7 @@ config = {
         "appId": os.environ.get("APPID"),
         "measurementId": os.environ.get("MEASUREMENTID"),
 }
+
 """
 config = {
     "apiKey": "AIzaSyAiBxG429FT-kZj9tjpAjHlcIo6CDXed7s",
@@ -25,6 +26,7 @@ config = {
     "appId": "1:445402188887:web:55ea85d4e7ab506a036712",
     "measurementId": "G-S34T7N2NN7"
 }
+"""
 firebase = pyrebase.initialize_app(config)
 
 db = firebase.database()
