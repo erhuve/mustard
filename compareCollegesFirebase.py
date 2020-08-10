@@ -15,18 +15,7 @@ config = {
         "measurementId": os.environ.get("MEASUREMENTID"),
 }
 
-"""
-config = {
-    "apiKey": "AIzaSyAiBxG429FT-kZj9tjpAjHlcIo6CDXed7s",
-    "authDomain": "mustard-cba34.firebaseapp.com",
-    "databaseURL": "https://mustard-cba34.firebaseio.com",
-    "projectId": "mustard-cba34",
-    "storageBucket": "mustard-cba34.appspot.com",
-    "messagingSenderId": "445402188887",
-    "appId": "1:445402188887:web:55ea85d4e7ab506a036712",
-    "measurementId": "G-S34T7N2NN7"
-}
-"""
+
 firebase = pyrebase.initialize_app(config)
 
 db = firebase.database()
